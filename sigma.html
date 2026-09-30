@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook from Temu</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f0f2f5;
+      color: #1c1e21;
+    }
+
+    /* =========================
+       DARK MODE
+    ========================= */
+
+    body.dark {
+      background: #18191a;
+      color: #e4e6eb;
+    }
+
+    body.dark .navbar,
+    body.dark .sidebar,
+    body.dark .rightbar,
+    body.dark .create-post,
+    body.dark .post {
+      background: #242526;
+      color: #e4e6eb;
+    }
+
+    body.dark .search,
+    body.dark .post-input,
+    body.dark .nav-icons span {
+      background: #3a3b3c;
+      color: #e4e6eb;
+    }
+
+    body.dark .post-time {
+      color: #b0b3b8;
+    }
+
+    body.dark .post-actions,
+    body.dark .post-buttons {
+      border-color: #3e4042;
+    }
+
+    body.dark .menu li:hover,
+    body.dark .post-actions button:hover,
+    body.dark .post-buttons button:hover {
+      background: #3a3b3c;
+    }
+
+    body.dark .search::placeholder,
+    body.dark .post-input::placeholder {
+      color: #b0b3b8;
+    }
+
+    /* =========================
+       NAVBAR
+    ========================= */
+
+    .navbar {
+      height: 60px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      box-shadow: 0 1px 4px #ccc;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      color: #1877f2;
+      white-space: nowrap;
+    }
+
+    .search {
+      background: #f0f2f5;
+      border: none;
+      border-radius: 20px;
+      padding: 11px 18px;
+      width: 250px;
+      outline: none;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 10px;
+      font-size: 20px;
+    }
+
+    .nav-icons span {
+      cursor: pointer;
+      background: #f0f2f5;
+      padding: 8px 11px;
+      border-radius: 50%;
+    }
+
+    .dark-button {
+      cursor: pointer;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: 250px 1fr 250px;
+      gap: 20px;
+    }
+
+    /* =========================
+       SIDE BARS
+    ========================= */
+
+    .sidebar,
+    .rightbar {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      height: fit-content;
+    }
+
+    .menu {
+      list-style: none;
+    }
+
+    .menu li {
+      padding: 13px 8px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .menu li:hover {
+      background: #f0f2f5;
+    }
+
+    /* =========================
+       STORIES
+    ========================= */
+
+    .stories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    .story {
+      min-width: 110px;
+      height: 170px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1877f2, #8b5cf6);
+      color: white;
+      display: flex;
+      align-items: flex-end;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       CREATE POST
+    ========================= */
+
+    .create-post {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .post-input {
+      width: 100%;
+      border: none;
+      background: #f0f2f5;
+      border-radius: 25px;
+      padding: 13px 18px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .post-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      border-top: 1px solid #ddd;
+      padding-top: 12px;
+    }
+
+    .post-buttons button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 8px;
+      border-radius: 8px;
+      color: inherit;
+    }
+
+    .post-buttons button:hover {
+      background: #f0f2f5;
+    }
+
+    /* =========================
+       POST
+    ========================= */
+
+    .post {
+      background: white;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 45px;
+      height: 45px;
+      background: #1877f2;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .post-user {
+      font-weight: bold;
+    }
+
+    .post-time {
+      font-size: 12px;
+      color: #65676b;
+    }
+
+    .post-text {
+      margin: 15px 0;
+      line-height: 1.5;
+    }
+
+    .post-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      margin-top: 12px;
+      padding-top: 10px;
+    }
+
+    .post-actions button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 8px 25px;
+      border-radius: 7px;
+      color: inherit;
+    }
+
+    .post-actions button:hover {
+      background: #f0f2f5;
+    }
+
+    .liked {
+      color: #1877f2 !important;
+      font-weight: bold;
+    }
+
+    /* =========================
+       FRIENDS
+    ========================= */
+
+    .rightbar h3 {
+      margin-bottom: 15px;
+    }
+
+    .friend {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+    }
+
+    .friend:hover {
+      background: #f0f2f5;
+    }
+
+    body.dark .friend:hover {
+      background: #3a3b3c;
+    }
+
+    .small-avatar {
+      width: 38px;
+      height: 38px;
+      background: #42b72a;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* =========================
+       IMAGE PREVIEW
+    ========================= */
+
+    .image-preview {
+      display: none;
+      position: relative;
+      margin-top: 15px;
+    }
+
+    .image-preview img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .remove-image {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: none;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* =========================
+       CHAT WINDOW
+    ========================= */
+
+    .chat-window {
+      position: fixed;
+      right: 25px;
+      bottom: 20px;
+      width: 360px;
+      height: 500px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    body.dark .chat-window {
+      background: #242526;
+      color: #e4e6eb;
+    }
+
+    .chat-header {
+      height: 60px;
+      background: #1877f2;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+    }
+
+    .chat-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+    }
+
+    .chat-avatar {
+      width: 38px;
+      height: 38px;
+      background: white;
+      color: #1877f2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .chat-close {
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 9px 13px;
+      border-radius: 18px;
+      word-wrap: break-word;
+    }
+
+    .message.received {
+      align-self: flex-start;
+      background: #e4e6eb;
+      color: #1c1e21;
+    }
+
+    body.dark .message.received {
+      background: #3a3b3c;
+      color: #e4e6eb;
+    }
+
+    .message.sent {
+      align-self: flex-end;
+      background: #1877f2;
+      color: white;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    body.dark .chat-input-area {
+      border-color: #3e4042;
+    }
+
+    .chat-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: #f0f2f5;
+      border-radius: 20px;
+      padding: 10px 14px;
+      color: #1c1e21;
+    }
+
+    body.dark .chat-input {
+      background: #3a3b3c;
+      color: white;
+    }
+
+    .chat-input::placeholder {
+      color: #777;
+    }
+
+    body.dark .chat-input::placeholder {
+      color: #b0b3b8;
+    }
+
+    .send-button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: #1877f2;
+      color: white;
+      cursor: pointer;
+      font-size: 17px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      .container {
+        grid-template-columns: 1fr;
+        max-width: 650px;
+      }
+
+      .sidebar,
+      .rightbar {
+        display: none;
+      }
+
+      .search {
+        width: 150px;
+      }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .navbar {
+        padding: 0 10px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .search {
+        width: 110px;
+      }
+
+      .nav-icons span:not(.dark-button) {
+        display: none;
+      }
+
+      .container {
+        margin: 10px;
+      }
+
+      .post-actions button {
+        padding: 8px 10px;
+      }
+
+      .post-buttons {
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .chat-window {
+        right: 10px;
+        bottom: 10px;
+        width: calc(100% - 20px);
+        height: 70vh;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       NAVBAR
+  ========================= -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Facebook from Temu
+    </div>
+
+    <input
+      class="search"
+      type="text"
+      placeholder="Search..."
+      onkeyup="searchPost(this.value)"
+    >
+
+    <div class="nav-icons">
+
+      <span>🏠</span>
+
+      <!-- CHAT BUTTON -->
+      <span
+        onclick="openChat('Messenger', 'M')"
+        title="Messenger"
+      >💬</span>
+
+      <span>🔔</span>
+      <span>👤</span>
+
+      <!-- DARK MODE -->
+      <span
+        id="themeButton"
+        class="dark-button"
+        onclick="toggleDarkMode()"
+        title="Dark Mode"
+      >D</span>
+
+    </div>
+
+  </nav>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main class="container">
+
+    <!-- LEFT SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <ul class="menu">
+
+        <li>👤 My Profile</li>
+        <li>📰 News Feed</li>
+        <li onclick="openChat('Messenger', 'M')">
+          💬 Messenger
+        </li>
+        <li>👥 Friends</li>
+        <li>🔔 Notifications</li>
+        <li>⚙️ Settings</li>
+        <li>🚪 Log out</li>
+
+      </ul>
+
+    </aside>
+
+
+    <!-- =========================
+         FEED
+    ========================= -->
+
+    <section>
+
+      <!-- STORIES -->
+
+      <div class="stories">
+
+        <div class="story">
+          ➕<br>Story нэмэх
+        </div>
+
+        <div class="story">Lexor2k</div>
+        <div class="story">Armes Ich</div>
+        <div class="story">Known As Munhu</div>
+        <div class="story">Jean Rose G Ylagan</div>
+
+      </div>
+
+
+      <!-- CREATE POST -->
+
+      <div class="create-post">
+
+        <input
+          id="postInput"
+          class="post-input"
+          type="text"
+          placeholder="Ci yu bodoj bn?"
+        >
+
+        <!-- IMAGE PREVIEW -->
+
+        <div
+          id="imagePreview"
+          class="image-preview"
+        >
+
+          <img id="previewImage">
+
+          <button
+            class="remove-image"
+            onclick="removeImage()"
+          >×</button>
+
+        </div>
+
+
+        <div class="post-buttons">
+
+          <button onclick="addPost()">
+            📝 Post hiih
+          </button>
+
+          <button
+            onclick="document.getElementById('imageInput').click()"
+          >
+            📷 Zurag oruulah
+          </button>
+
+          <button onclick="alert('Live ehluul')">
+            🔴 Live hiih
+          </button>
+
+        </div>
+
+
+        <input
+          id="imageInput"
+          type="file"
+          accept="image/*"
+          style="display:none"
+          onchange="previewImage(this)"
+        >
+
+      </div>
+
+
+      <!-- EXISTING POST -->
+
+      <div class="post">
+
+        <div class="post-header">
+
+          <div class="avatar">B</div>
+
+          <div>
+            <div class="post-user">
+              Bilguudei Bek
+            </div>
+
+            <div class="post-time">
+              2 цагийн өмнө
+            </div>
+          </div>
+
+        </div>
+
+
+        <p class="post-text">
+          A day with my Nomio! &lt;3
+        </p>
+
+
+        <div
+          class="post-image"
+          style="
+            background: linear-gradient(
+              135deg,
+              #667eea,
+              #764ba2
+            );
+            height:300px;
+          "
+        ></div>
+
+
+        <div class="post-actions">
+
+          <button onclick="likePost(this)">
+            👍 Like <span>69K</span>
+          </button>
+
+          <button onclick="commentPost()">
+            💬 Comment
+          </button>
+
+          <button onclick="sharePost()">
+            ↗️ Share
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SECOND POST -->
+
+      <div class="post">
+
+        <div class="post-header">
+
+          <div class="avatar">С</div>
+
+          <div>
+            <div class="post-user">
+              Ch. Temuulen
+            </div>
+
+            <div class="post-time">
+              5 цагийн өмнө
+            </div>
+          </div>
+
+        </div>
+
+
+        <p class="post-text">
+          A day with my homies ❤️
+        </p>
+
+
+        <div class="post-actions">
+
+          <button onclick="likePost(this)">
+            👍 Like <span>0</span>
+          </button>
+
+          <button onclick="commentPost()">
+            💬 Comment
+          </button>
+
+          <button onclick="sharePost()">
+            ↗️ Share
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RIGHT SIDEBAR
+    ========================= -->
+
+    <aside class="rightbar">
+
+      <h3>Найзууд</h3>
+
+      <div
+        class="friend"
+        onclick="openChat('Bilguudei Bek', 'B')"
+      >
+        <div class="small-avatar">B</div>
+        <span>Bilguudei Bek</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Ч. Тэмүүлэн', 'Ч')"
+      >
+        <div class="small-avatar">Ч</div>
+        <span>Ч. Тэмүүлэн</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('П. Түвшинтөгс', 'П')"
+      >
+        <div class="small-avatar">П</div>
+        <span>П. Түвшинтөгс</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Mergen Tseku', 'M')"
+      >
+        <div class="small-avatar">M</div>
+        <span>Mergen Tseku</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Budmaa Amarsanaa', 'B')"
+      >
+        <div class="small-avatar">B</div>
+        <span>Budmaa Amarsanaa</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('С. Энхчимэг', 'С')"
+      >
+        <div class="small-avatar">С</div>
+        <span>С. Энхчимэг</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Known As Munhu', 'K')"
+      >
+        <div class="small-avatar">K</div>
+        <span>Known As Munhu</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Бэйс', 'Б')"
+      >
+        <div class="small-avatar">Б</div>
+        <span>Бэйс</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Э. Намуундарь', 'Э')"
+      >
+        <div class="small-avatar">Э</div>
+        <span>Э. Намуундарь</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Kalashi Kakashi', 'K')"
+      >
+        <div class="small-avatar">K</div>
+        <span>Kalashi Kakashi</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('О. Ундрах', 'О')"
+      >
+        <div class="small-avatar">О</div>
+        <span>О. Ундрах</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Armes Ich', 'A')"
+      >
+        <div class="small-avatar">A</div>
+        <span>Armes Ich</span>
+      </div>
+
+      <div
+        class="friend"
+        onclick="openChat('Аззаяа С.', 'А')"
+      >
+        <div class="small-avatar">А</div>
+        <span>Аззаяа С.</span>
+      </div>
+
+    </aside>
+
+  </main>
+
+
+  <!-- =========================
+       CHAT WINDOW
+  ========================= -->
+
+  <div
+    id="chatWindow"
+    class="chat-window"
+  >
+
+    <!-- CHAT HEADER -->
+
+    <div class="chat-header">
+
+      <div class="chat-user">
+
+        <div
+          id="chatAvatar"
+          class="chat-avatar"
+        >M</div>
+
+        <span id="chatName">
+          Messenger
+        </span>
+
+      </div>
+
+
+      <button
+        class="chat-close"
+        onclick="closeChat()"
+      >×</button>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div
+      id="chatMessages"
+      class="chat-messages"
+    ></div>
+
+
+    <!-- INPUT -->
+
+    <div class="chat-input-area">
+
+      <input
+        id="chatInput"
+        class="chat-input"
+        type="text"
+        placeholder="Message бич..."
+        onkeydown="handleChatKey(event)"
+      >
+
+      <button
+        class="send-button"
+        onclick="sendMessage()"
+      >➤</button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /* =========================
+       IMAGE UPLOAD
+    ========================= */
+
+    let selectedImage = "";
+
+
+    function previewImage(input) {
+
+      const preview =
+        document.getElementById("imagePreview");
+
+      const image =
+        document.getElementById("previewImage");
+
+
+      if (input.files && input.files[0]) {
+
+        const file = input.files[0];
+
+
+        if (!file.type.startsWith("image/")) {
+
+          alert("Зөвхөн зураг сонгоно уу.");
+
+          return;
+
+        }
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload = function(e) {
+
+          selectedImage = e.target.result;
+
+          image.src = selectedImage;
+
+          preview.style.display = "block";
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+      }
+
+    }
+
+
+    function removeImage() {
+
+      selectedImage = "";
+
+      document.getElementById(
+        "imageInput"
+      ).value = "";
+
+      document.getElementById(
+        "imagePreview"
+      ).style.display = "none";
+
+      document.getElementById(
+        "previewImage"
+      ).src = "";
+
+    }
+
+
+    /* =========================
+       LIKE
+    ========================= */
+
+    function likePost(button) {
+
+      let count =
+        button.querySelector("span");
+
+      let number =
+        Number(
+          count.innerText.replace("K", "")
+        );
+
+
+      if (
+        button.classList.contains("liked")
+      ) {
+
+        number--;
+
+        button.classList.remove("liked");
+
+      } else {
+
+        number++;
+
+        button.classList.add("liked");
+
+      }
+
+
+      count.innerText = number;
+
+    }
+
+
+    /* =========================
+       COMMENT
+    ========================= */
+
+    function commentPost() {
+
+      let comment =
+        prompt("Comment bich:");
+
+
+      if (comment) {
+
+        alert(
+          "Comment nemegdsn: " + comment
+        );
+
+      }
+
+    }
+
+
+    /* =========================
+       SHARE
+    ========================= */
+
+    function sharePost() {
+
+      alert("Post shared! 🚀");
+
+    }
+
+
+    /* =========================
+       ADD POST
+    ========================= */
+
+    function addPost() {
+
+      const input =
+        document.getElementById(
+          "postInput"
+        );
+
+      const text =
+        input.value.trim();
+
+
+      if (
+        text === "" &&
+        selectedImage === ""
+      ) {
+
+        alert(
+          "Post эсвэл зураг оруулна уу."
+        );
+
+        return;
+
+      }
+
+
+      const post =
+        document.createElement("div");
+
+      post.className = "post";
+
+
+      let imageHTML = "";
+
+
+      if (selectedImage !== "") {
+
+        imageHTML = `
+          <img
+            class="post-image"
+            src="${selectedImage}"
+            alt="Uploaded image"
+          >
+        `;
+
+      }
+
+
+      post.innerHTML = `
+
+        <div class="post-header">
+
+          <div class="avatar">
+            E
+          </div>
+
+          <div>
+
+            <div class="post-user">
+              Eenee
+            </div>
+
+            <div class="post-time">
+              Дөнгөж сая
+            </div>
+
+          </div>
+
+        </div>
+
+        ${
+          text
+          ? `<p class="post-text">
+              ${escapeHTML(text)}
+             </p>`
+          : ""
+        }
+
+        ${imageHTML}
+
+        <div class="post-actions">
+
+          <button onclick="likePost(this)">
+            👍 Like <span>0</span>
+          </button>
+
+          <button onclick="commentPost()">
+            💬 Comment
+          </button>
+
+          <button onclick="sharePost()">
+            ↗️ Share
+          </button>
+
+        </div>
+      `;
+
+
+      document
+        .querySelector("section")
+        .appendChild(post);
+
+
+      input.value = "";
+
+      removeImage();
+
+    }
+
+
+    /* =========================
+       HTML SECURITY
+    ========================= */
+
+    function escapeHTML(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+
+    }
+
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    function searchPost(value) {
+
+      const posts =
+        document.querySelectorAll(".post");
+
+
+      value =
+        value.toLowerCase();
+
+
+      posts.forEach(post => {
+
+        const text =
+          post.innerText.toLowerCase();
+
+
+        if (text.includes(value)) {
+
+          post.style.display = "block";
+
+        } else {
+
+          post.style.display = "none";
+
+        }
+
+      });
+
+    }
+
+
+    /* =========================
+       DARK MODE
+       NO TRANSITION
+    ========================= */
+
+    function toggleDarkMode() {
+
+      document.body.classList.toggle("dark");
+
+
+      const isDark =
+        document.body.classList.contains(
+          "dark"
+        );
+
+
+      const button =
+        document.getElementById(
+          "themeButton"
+        );
+
+
+      if (isDark) {
+
+        button.innerText = "D";
+
+        localStorage.setItem(
+          "darkMode",
+          "on"
+        );
+
+      } else {
+
+        button.innerText = "L";
+
+        localStorage.setItem(
+          "darkMode",
+          "off"
+        );
+
+      }
+
+    }
+
+
+    /* =========================
+       LOAD DARK MODE
+    ========================= */
+
+    window.onload = function() {
+
+      const darkMode =
+        localStorage.getItem(
+          "darkMode"
+        );
+
+
+      const button =
+        document.getElementById(
+          "themeButton"
+        );
+
+
+      if (darkMode === "on") {
+
+        document.body.classList.add(
+          "dark"
+        );
+
+        button.innerText = "L";
+
+      }
+
+    };
+
+
+    /* =========================
+       CHAT SYSTEM
+    ========================= */
+
+    let currentChat = "";
+
+
+    function openChat(name, avatar) {
+
+      currentChat = name;
+
+
+      document.getElementById(
+        "chatWindow"
+      ).style.display = "flex";
+
+
+      document.getElementById(
+        "chatName"
+      ).innerText = name;
+
+
+      document.getElementById(
+        "chatAvatar"
+      ).innerText = avatar;
+
+
+      loadMessages(name);
+
+
+      setTimeout(() => {
+
+        document.getElementById(
+          "chatInput"
+        ).focus();
+
+      }, 50);
+
+    }
+
+
+    function closeChat() {
+
+      document.getElementById(
+        "chatWindow"
+      ).style.display = "none";
+
+    }
+
+
+    /* =========================
+       LOAD CHAT MESSAGES
+    ========================= */
+
+    function loadMessages(name) {
+
+      const messagesBox =
+        document.getElementById(
+          "chatMessages"
+        );
+
+
+      messagesBox.innerHTML = "";
+
+
+      const saved =
+        localStorage.getItem(
+          "chat_" + name
+        );
+
+
+      if (saved) {
+
+        const messages =
+          JSON.parse(saved);
+
+
+        messages.forEach(message => {
+
+          addMessageToScreen(
+            message.text,
+            message.type
+          );
+
+        });
+
+      } else {
+
+        addMessageToScreen(
+          "Сайн уу 👋",
+          "received"
+        );
+
+      }
+
+
+      messagesBox.scrollTop =
+        messagesBox.scrollHeight;
+
+    }
+
+
+    /* =========================
+       SEND MESSAGE
+    ========================= */
+
+    function sendMessage() {
+
+      const input =
+        document.getElementById(
+          "chatInput"
+        );
+
+
+      const text =
+        input.value.trim();
+
+
+      if (text === "") {
+        return;
+      }
+
+
+      addMessageToScreen(
+        text,
+        "sent"
+      );
+
+
+      saveMessage(
+        currentChat,
+        text,
+        "sent"
+      );
+
+
+      input.value = "";
+
+
+      const messagesBox =
+        document.getElementById(
+          "chatMessages"
+        );
+
+
+      messagesBox.scrollTop =
+        messagesBox.scrollHeight;
+
+
+      /*
+        Demo auto reply.
+        Жинхэнэ backend байхгүй учраас
+        энд demo reply хийж байна.
+      */
+
+      setTimeout(() => {
+
+        const reply =
+          getAutoReply(text);
+
+
+        addMessageToScreen(
+          reply,
+          "received"
+        );
+
+
+        saveMessage(
+          currentChat,
+          reply,
+          "received"
+        );
+
+
+        messagesBox.scrollTop =
+          messagesBox.scrollHeight;
+
+      }, 500);
+
+    }
+
+
+    /* =========================
+       ENTER = SEND
+    ========================= */
+
+    function handleChatKey(event) {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        sendMessage();
+
+      }
+
+    }
+
+
+    /* =========================
+       ADD MESSAGE
+    ========================= */
+
+    function addMessageToScreen(
+      text,
+      type
+    ) {
+
+      const messagesBox =
+        document.getElementById(
+          "chatMessages"
+        );
+
+
+      const message =
+        document.createElement("div");
+
+
+      message.className =
+        "message " + type;
+
+
+      message.innerText = text;
+
+
+      messagesBox.appendChild(
+        message
+      );
+
+    }
+
+
+    /* =========================
+       SAVE MESSAGE
+    ========================= */
+
+    function saveMessage(
+      name,
+      text,
+      type
+    ) {
+
+      const key =
+        "chat_" + name;
+
+
+      let messages = [];
+
+
+      const saved =
+        localStorage.getItem(key);
+
+
+      if (saved) {
+
+        messages =
+          JSON.parse(saved);
+
+      }
+
+
+      messages.push({
+        text: text,
+        type: type
+      });
+
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(messages)
+      );
+
+    }
+
+
+    /* =========================
+       AUTO REPLY
+    ========================= */
+
+    function getAutoReply(text) {
+
+      const lower =
+        text.toLowerCase();
+
+
+      if (
+        lower.includes("sain") ||
+        lower.includes("hello")
+      ) {
+
+        return "Сайн уу 😄";
+
+      }
+
+
+      if (
+        lower.includes("yu bn") ||
+        lower.includes("yubn")
+      ) {
+
+        return "Зүгээр ээ, чи юу байна? 😎";
+
+      }
+
+
+      if (
+        lower.includes("haha") ||
+        lower.includes("lol")
+      ) {
+
+        return "😂😂😂";
+
+      }
+
+
+      const replies = [
+
+        "Тийм шүү 👍",
+
+        "Хаха за 😂",
+
+        "Ойлголоо 😎",
+
+        "Яг үнэн.",
+
+        "За за 😂",
+
+        "Сонирхолтой юм байна.",
+
+        "Хэзээ уулзах вэ? 👀"
+
+      ];
+
+
+      return replies[
+        Math.floor(
+          Math.random() *
+          replies.length
+        )
+      ];
+
+    }
+
+  </script>
+
+</body>
+</html>
